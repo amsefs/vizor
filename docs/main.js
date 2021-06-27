@@ -421,17 +421,8 @@ render();
   function handleCommentsChange(e) {
     setComments(e.target.checked);
   }
-
-  function handleCommentsClick(e) {
-    let see = !RENDER_OPTIONS.seeComments;
-    let tiket = document.querySelector('input[type="checkbox"]');
-    tiket.checked = !tiket.checked;
-    setComments(see)
-  }
-
   document.querySelector('.toolbar input[type="checkbox"]').addEventListener('change', handleCommentsChange);
-  document.querySelector('.toolbar .seeComments').addEventListener('click', handleCommentsClick);
-})();
+  })();
 
 // list all comments
 (function () {
