@@ -1,4 +1,6 @@
 var webpack = require('webpack');
+
+
 var fileName = 'pdf-annotate';
 var plugins = [];
 
@@ -9,33 +11,33 @@ if (process.env.MINIFY) {
   );
 }
 
-// module.exports = {
-//   devtool: 'source-map',
-//   plugins: plugins,
-//   entry: './index.js',
-//   output: {
-//     filename: 'dist/' + fileName + '.js',
-//     library: 'PDFAnnotate',
-//     libraryTarget: 'umd'
-//   },
-//   module: {
-//     loaders: [
-//       {
-//         test: /\.js$/,
-//         exclude: /node_modules/,
-//         loader: 'babel-loader',
-//         query: {
-//           presets: ['es2015'],
-//           plugins: ['add-module-exports']
-//         }
-//       }
-//     ]
-//   }
-// };
-
-//
-
 module.exports = {
+  devtool: 'source-map',
+  plugins: plugins,
+  entry: './index.js',
+  output: {
+    filename: 'dist/' + fileName + '.js',
+    library: 'PDFAnnotate',
+    libraryTarget: 'umd'
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015'],
+          plugins: ['add-module-exports']
+        }
+      }
+    ]
+  }
+};
+
+
+
+/*module.exports = {
   entry: './docs/main.js',
 
   output: {
@@ -55,6 +57,5 @@ module.exports = {
       }
     ]
   }
-};
+};*/
 
-///console.log

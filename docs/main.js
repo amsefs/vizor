@@ -17,72 +17,83 @@ PDFJSAnnotate.setStoreAdapter(new PDFJSAnnotate.LocalStoreAdapter());
 PDFJS.workerSrc = './shared/pdf.worker.js';
 
 // Render stuff
+let renderedPages = [];
+let okToRender = false;
+var pageactual = 1;
 let NUM_PAGES = 0;
 document.getElementById('content-wrapper').addEventListener('scroll', function (e) {
   let visiblePageNum = Math.round(e.target.scrollTop / PAGE_HEIGHT) + 1;
+  pageactual = visiblePageNum;
   let visiblePage = document.querySelector(`.page[data-page-number="${visiblePageNum}"][data-loaded="false"]`);
-  if (visiblePage) {
-    setTimeout(function () {
-      UI.renderPage(visiblePageNum, RENDER_OPTIONS);
-    });
+  if (renderedPages.indexOf(visiblePageNum) === -1) {
+    okToRender = true;
+    renderedPages.push(visiblePageNum);
+  }
+  else {
+    okToRender = false;
+  }
+  if (visiblePage && okToRender) {
+    //setTimeout(function () {
+    UI.renderPage(visiblePageNum, RENDER_OPTIONS);
+    //});
   }
 });
 
 // List all annotations in the document
 function listAnnotations() {
-    let annotations = JSON.parse(localStorage.getItem(`${RENDER_OPTIONS.documentId}/annotations`)) || [];
-    let commentList = document.querySelector('#comment-wrapper .comment-list-container');
+  let annotations = JSON.parse(localStorage.getItem(`${RENDER_OPTIONS.documentId}/annotations`)) || [];
+  let commentList = document.querySelector('#comment-wrapper .comment-list-container');
 
-    function groupComments(comments) {
-        let result = [];
-        comments.map(item => {
-            if (item.type) {
-                let pibote = item;
-                pibote.content = '';
-                comments.map(itemComent => {
-                    if (itemComent.annotation && itemComent.class == 'Comment' && itemComent.annotation == pibote.uuid) {
-                        pibote.content = pibote.content + ' ' + itemComent.content;
-                    }
-                });
-                result.push(pibote);
-            }
+  function groupComments(comments) {
+    let result = [];
+    comments.map(item => {
+      if (item.type) {
+        let pibote = item;
+        pibote.content = '';
+        comments.map(itemComent => {
+          if (itemComent.annotation && itemComent.class == 'Comment' && itemComent.annotation == pibote.uuid) {
+            pibote.content = pibote.content + ' ' + itemComent.content;
+          }
         });
-        return result;
-    }
-
-    function goToPage(x, y, pageNumber) { // e?
-        console.log('sata', x, y, pageNumber)
-        if (pageNumber && pageNumber > 0) {
-            // render2(pageNumber, x, y);
-            showPage(pageNumber);
-        }
-    }
-
-    function insertCommentWithLink(comment) {
-        let child = document.createElement('div');
-        child.className = 'comment-list-item';
-        // child.innerHTML = twitter.autoLink(twitter.htmlEscape(comment.content || ''));
-        // child.addEventListener('click', function() { goToPage(comment.x || '0', comment.y || '0', comment.page || '0') }); //        //saltar);
-
-        var createA = document.createElement('a');
-        var createAText = document.createTextNode(comment.content);
-        createA.setAttribute('href', "#pageContainer" + comment.page);
-        createA.appendChild(createAText);
-        child.appendChild(createA);
-
-        commentList.appendChild(child);
-    }
-
-    let sortedComments = groupComments(annotations);
-
-    let nested = document.querySelector(".comment-list-container");
-    nested.innerHTML = '';
-    sortedComments.map(elem => {
-        // annotations.map(elem => {
-        console.log('elem ', elem)
-        return insertCommentWithLink(elem)
-    })
+        result.push(pibote);
+      }
+    });
+    return result;
   }
+
+  function goToPage(x, y, pageNumber) { // e?
+    console.log('sata', x, y, pageNumber)
+    if (pageNumber && pageNumber > 0) {
+      // render2(pageNumber, x, y);
+      showPage(pageNumber);
+    }
+  }
+
+  function insertCommentWithLink(comment) {
+    let child = document.createElement('div');
+    child.className = 'comment-list-item';
+    // child.innerHTML = twitter.autoLink(twitter.htmlEscape(comment.content || ''));
+    // child.addEventListener('click', function() { goToPage(comment.x || '0', comment.y || '0', comment.page || '0') }); //        //saltar);
+
+    var createA = document.createElement('a');
+    var createAText = document.createTextNode(comment.content);
+    createA.setAttribute('href', "#pageContainer" + comment.page);
+    createA.appendChild(createAText);
+    child.appendChild(createA);
+
+    commentList.appendChild(child);
+  }
+
+  let sortedComments = groupComments(annotations);
+
+  let nested = document.querySelector(".comment-list-container");
+  nested.innerHTML = '';
+  sortedComments.map(elem => {
+    // annotations.map(elem => {
+    console.log('elem ', elem)
+    return insertCommentWithLink(elem)
+  })
+}
 
 function render() {
   PDFJS.getDocument(RENDER_OPTIONS.documentId).then((pdf) => {
@@ -91,8 +102,8 @@ function render() {
     let viewer = document.getElementById('viewer');
     viewer.innerHTML = '';
     NUM_PAGES = pdf.pdfInfo.numPages;
-    for (let i=0; i<NUM_PAGES; i++) {
-      let page = UI.createPage(i+1);
+    for (let i = 0; i < NUM_PAGES; i++) {
+      let page = UI.createPage(i + 1);
       viewer.appendChild(page);
     }
 
@@ -113,7 +124,7 @@ listAnnotations();
   function initText() {
     let size = document.querySelector('.toolbar .text-size');
     [8, 9, 10, 11, 12, 14, 18, 24].forEach((s) => {
-      size.appendChild(new Option (s, s));
+      size.appendChild(new Option(s, s));
     });
 
     setText(
@@ -176,8 +187,8 @@ listAnnotations();
 
   function initPen() {
     let size = document.querySelector('.toolbar .pen-size');
-    for (let i=0; i<0; i++) {
-      size.appendChild(new Option(i+1, i+1));
+    for (let i = 0; i < 0; i++) {
+      size.appendChild(new Option(i + 1, i + 1));
     }
 
     setPen(
@@ -342,8 +353,8 @@ listAnnotations();
 (function () {
   function handleClearClick(e) {
     if (confirm('Desea borrar todas las anotaciones?')) {
-      for (let i=0; i<NUM_PAGES; i++) {
-        document.querySelector(`div#pageContainer${i+1} svg.annotationLayer`).innerHTML = '';
+      for (let i = 0; i < NUM_PAGES; i++) {
+        document.querySelector(`div#pageContainer${i + 1} svg.annotationLayer`).innerHTML = '';
       }
 
       localStorage.removeItem(`${RENDER_OPTIONS.documentId}/annotations`);
@@ -354,39 +365,39 @@ listAnnotations();
 
 
 // see or not the comments
-(function() {
+(function () {
 
-    function setComments(see) {
+  function setComments(see) {
 
-        if (RENDER_OPTIONS.seeComments !== see) {
-            RENDER_OPTIONS.seeComments = see;
-            localStorage.setItem(RENDER_OPTIONS.documentId + '/seecomments', RENDER_OPTIONS.seeComments);
-            render();
-        }
+    if (RENDER_OPTIONS.seeComments !== see) {
+      RENDER_OPTIONS.seeComments = see;
+      localStorage.setItem(RENDER_OPTIONS.documentId + '/seecomments', RENDER_OPTIONS.seeComments);
+      render();
     }
+  }
 
-    function handleCommentsChange(e) {
-        setComments(e.target.checked);
-    }
+  function handleCommentsChange(e) {
+    setComments(e.target.checked);
+  }
 
-    function handleCommentsClick(e) {
-        let see = !RENDER_OPTIONS.seeComments;
-        let tiket = document.querySelector('input[type="checkbox"]');
-        tiket.checked = !tiket.checked;
-        setComments(see)
-    }
+  function handleCommentsClick(e) {
+    let see = !RENDER_OPTIONS.seeComments;
+    let tiket = document.querySelector('input[type="checkbox"]');
+    tiket.checked = !tiket.checked;
+    setComments(see)
+  }
 
-    document.querySelector('.toolbar input[type="checkbox"]').addEventListener('change', handleCommentsChange);
-    document.querySelector('.toolbar .seeComments').addEventListener('click', handleCommentsClick);
+  document.querySelector('.toolbar input[type="checkbox"]').addEventListener('change', handleCommentsChange);
+  document.querySelector('.toolbar .seeComments').addEventListener('click', handleCommentsClick);
 })();
 
 // list all comments
-(function() {
-    function handleListCommentsClick(e) {
-        //  render();
-        listAnnotations();
-    }
-    document.querySelector('.toolbar .listComments').addEventListener('click', handleListCommentsClick);
+(function () {
+  function handleListCommentsClick(e) {
+    //  render();
+    listAnnotations();
+  }
+  document.querySelector('.toolbar .listComments').addEventListener('click', handleListCommentsClick);
 })();
 
 // Comment stuff
@@ -401,6 +412,7 @@ listAnnotations();
   }
 
   function insertComment(comment) {
+    commentText.value = comment.content;
     let child = document.createElement('div');
     child.className = 'comment-list-item';
     child.innerHTML = twitter.autoLink(twitter.htmlEscape(comment.content));
@@ -440,7 +452,7 @@ listAnnotations();
       commentForm.style.display = 'none';
       commentForm.onsubmit = null;
 
-      insertComment({content: 'No comments'});
+      insertComment({ content: 'No comments' });
     }
   }
 

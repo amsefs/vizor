@@ -78,14 +78,24 @@
 	PDFJS.workerSrc = './shared/pdf.worker.js';
 
 	// Render stuff
+	var renderedPages = [];
+	var okToRender = false;
+	var pageactual = 1;
 	var NUM_PAGES = 0;
 	document.getElementById('content-wrapper').addEventListener('scroll', function (e) {
 	  var visiblePageNum = Math.round(e.target.scrollTop / PAGE_HEIGHT) + 1;
+	  pageactual = visiblePageNum;
 	  var visiblePage = document.querySelector('.page[data-page-number="' + visiblePageNum + '"][data-loaded="false"]');
-	  if (visiblePage) {
-	    setTimeout(function () {
-	      UI.renderPage(visiblePageNum, RENDER_OPTIONS);
-	    });
+	  if (renderedPages.indexOf(visiblePageNum) === -1) {
+	    okToRender = true;
+	    renderedPages.push(visiblePageNum);
+	  } else {
+	    okToRender = false;
+	  }
+	  if (visiblePage && okToRender) {
+	    //setTimeout(function () {
+	    UI.renderPage(visiblePageNum, RENDER_OPTIONS);
+	    //});
 	  }
 	});
 
@@ -459,6 +469,7 @@
 	  }
 
 	  function insertComment(comment) {
+	    commentText.value = comment.content;
 	    var child = document.createElement('div');
 	    child.className = 'comment-list-item';
 	    child.innerHTML = _twitterText2.default.autoLink(_twitterText2.default.htmlEscape(comment.content));
