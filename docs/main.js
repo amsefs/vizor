@@ -494,7 +494,7 @@ render();
       commentForm.style.display = 'none';
       commentForm.onsubmit = null;
 
-      insertComment({ content: 'No comments' });
+      insertComment({ content: 'Sin Comentario' });
     }
   }
 

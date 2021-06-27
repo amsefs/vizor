@@ -19,10 +19,10 @@ function handleDocumentMouseup(e) {
   if (input || !findSVGAtPoint(e.clientX, e.clientY)) {
     return
   }
-  
+
   input = document.createElement('input');
   input.setAttribute('id', 'pdf-annotate-point-input');
-  input.setAttribute('placeholder', 'Enter comment');
+  input.setAttribute('placeholder', 'Introducir anotación');
   input.style.border = `3px solid ${BORDER_COLOR}`;
   input.style.borderRadius = '3px';
   input.style.position = 'absolute';
@@ -72,11 +72,11 @@ function savePoint() {
     let rect = svg.getBoundingClientRect();
     let { documentId, pageNumber } = getMetadata(svg);
     let annotation = Object.assign({
-        type: 'point'
-      }, scaleDown(svg, {
-        x: clientX - rect.left,
-        y: clientY - rect.top
-      })
+      type: 'point'
+    }, scaleDown(svg, {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    })
     );
 
     PDFJSAnnotate.getStoreAdapter().addAnnotation(documentId, pageNumber, annotation)

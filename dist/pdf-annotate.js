@@ -3349,7 +3349,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  input = document.createElement('input');
 	  input.setAttribute('id', 'pdf-annotate-point-input');
-	  input.setAttribute('placeholder', 'Enter comment');
+	  input.setAttribute('placeholder', 'Introducir anotación');
 	  input.style.border = '3px solid ' + _utils.BORDER_COLOR;
 	  input.style.borderRadius = '3px';
 	  input.style.position = 'absolute';

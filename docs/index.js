@@ -99,7 +99,6 @@
 	  }
 	});
 
-	//-------------Extra-----------------------------------
 	function obtTodasAnotaciones(documentId) {
 	  var todasAnotaciones = JSON.parse(localStorage.getItem(documentId + '/annotations')) || [];
 
@@ -133,7 +132,6 @@
 	  }
 	  return arrayAnotionsClassPoint;
 	}
-	//-----------------------------------------------------
 
 	// List all annotations in the document
 	function listAnnotations() {
@@ -548,7 +546,7 @@
 	      commentForm.style.display = 'none';
 	      commentForm.onsubmit = null;
 
-	      insertComment({ content: 'No comments' });
+	      insertComment({ content: 'Sin Comentario' });
 	    }
 	  }
 
@@ -5332,7 +5330,7 @@
 
 					input = document.createElement('input');
 					input.setAttribute('id', 'pdf-annotate-point-input');
-					input.setAttribute('placeholder', 'Enter comment');
+					input.setAttribute('placeholder', 'Introducir anotación');
 					input.style.border = '3px solid ' + _utils.BORDER_COLOR;
 					input.style.borderRadius = '3px';
 					input.style.position = 'absolute';
