@@ -9,7 +9,8 @@ let RENDER_OPTIONS = {
   documentId,
   pdfDocument: null,
   scale: parseFloat(localStorage.getItem(`${documentId}/scale`), 10) || 1.33,
-  rotate: parseInt(localStorage.getItem(`${documentId}/rotate`), 10) || 0
+  rotate: parseInt(localStorage.getItem(`${documentId}/rotate`), 10) || 0,
+  seeComments: true
 };
 
 PDFJSAnnotate.setStoreAdapter(new PDFJSAnnotate.LocalStoreAdapter());
@@ -26,6 +27,62 @@ document.getElementById('content-wrapper').addEventListener('scroll', function (
     });
   }
 });
+
+// List all annotations in the document
+function listAnnotations() {
+    let annotations = JSON.parse(localStorage.getItem(`${RENDER_OPTIONS.documentId}/annotations`)) || [];
+    let commentList = document.querySelector('#comment-wrapper .comment-list-container');
+
+    function groupComments(comments) {
+        let result = [];
+        comments.map(item => {
+            if (item.type) {
+                let pibote = item;
+                pibote.content = '';
+                comments.map(itemComent => {
+                    if (itemComent.annotation && itemComent.class == 'Comment' && itemComent.annotation == pibote.uuid) {
+                        pibote.content = pibote.content + ' ' + itemComent.content;
+                    }
+                });
+                result.push(pibote);
+            }
+        });
+        return result;
+    }
+
+    function goToPage(x, y, pageNumber) { // e?
+        console.log('sata', x, y, pageNumber)
+        if (pageNumber && pageNumber > 0) {
+            // render2(pageNumber, x, y);
+            showPage(pageNumber);
+        }
+    }
+
+    function insertCommentWithLink(comment) {
+        let child = document.createElement('div');
+        child.className = 'comment-list-item';
+        // child.innerHTML = twitter.autoLink(twitter.htmlEscape(comment.content || ''));
+        // child.addEventListener('click', function() { goToPage(comment.x || '0', comment.y || '0', comment.page || '0') }); //        //saltar);
+
+        var createA = document.createElement('a');
+        var createAText = document.createTextNode(comment.content);
+        createA.setAttribute('href', "#pageContainer" + comment.page);
+        createA.appendChild(createAText);
+        child.appendChild(createA);
+
+        commentList.appendChild(child);
+    }
+
+    let sortedComments = groupComments(annotations);
+
+    let nested = document.querySelector(".comment-list-container");
+    nested.innerHTML = '';
+    sortedComments.map(elem => {
+        // annotations.map(elem => {
+        console.log('elem ', elem)
+        return insertCommentWithLink(elem)
+    })
+  }
 
 function render() {
   PDFJS.getDocument(RENDER_OPTIONS.documentId).then((pdf) => {
@@ -46,6 +103,7 @@ function render() {
   });
 }
 render();
+listAnnotations();
 
 // Text stuff
 (function () {
@@ -292,6 +350,43 @@ render();
     }
   }
   document.querySelector('a.clear').addEventListener('click', handleClearClick);
+})();
+
+
+// see or not the comments
+(function() {
+
+    function setComments(see) {
+
+        if (RENDER_OPTIONS.seeComments !== see) {
+            RENDER_OPTIONS.seeComments = see;
+            localStorage.setItem(RENDER_OPTIONS.documentId + '/seecomments', RENDER_OPTIONS.seeComments);
+            render();
+        }
+    }
+
+    function handleCommentsChange(e) {
+        setComments(e.target.checked);
+    }
+
+    function handleCommentsClick(e) {
+        let see = !RENDER_OPTIONS.seeComments;
+        let tiket = document.querySelector('input[type="checkbox"]');
+        tiket.checked = !tiket.checked;
+        setComments(see)
+    }
+
+    document.querySelector('.toolbar input[type="checkbox"]').addEventListener('change', handleCommentsChange);
+    document.querySelector('.toolbar .seeComments').addEventListener('click', handleCommentsClick);
+})();
+
+// list all comments
+(function() {
+    function handleListCommentsClick(e) {
+        //  render();
+        listAnnotations();
+    }
+    document.querySelector('.toolbar .listComments').addEventListener('click', handleListCommentsClick);
 })();
 
 // Comment stuff

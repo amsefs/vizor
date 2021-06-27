@@ -473,3 +473,12 @@
     .logo {
         width: 70px;
     }
+
+    a {
+      /*background: url("images/flecha.png");
+      height: 11px;
+      width: 11px;
+      */
+      color: #333;
+      text-decoration: none;
+  }
