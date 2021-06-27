@@ -49,7 +49,8 @@ export function renderPage(pageNumber, renderOptions) {
     documentId,
     pdfDocument,
     scale,
-    rotate
+    rotate,
+    seeComments
   } = renderOptions;
 
   // Load the page and annotations

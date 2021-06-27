@@ -9,15 +9,40 @@ if (process.env.MINIFY) {
   );
 }
 
+// module.exports = {
+//   devtool: 'source-map',
+//   plugins: plugins,
+//   entry: './index.js',
+//   output: {
+//     filename: 'dist/' + fileName + '.js',
+//     library: 'PDFAnnotate',
+//     libraryTarget: 'umd'
+//   },
+//   module: {
+//     loaders: [
+//       {
+//         test: /\.js$/,
+//         exclude: /node_modules/,
+//         loader: 'babel-loader',
+//         query: {
+//           presets: ['es2015'],
+//           plugins: ['add-module-exports']
+//         }
+//       }
+//     ]
+//   }
+// };
+
+//
+
 module.exports = {
-  devtool: 'source-map',
-  plugins: plugins,
-  entry: './index.js',
+  entry: './docs/main.js',
+
   output: {
-    filename: 'dist/' + fileName + '.js',
-    library: 'PDFAnnotate',
-    libraryTarget: 'umd'
+    filename: 'index.js',
+    path: 'docs'
   },
+
   module: {
     loaders: [
       {
@@ -25,8 +50,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015'],
-          plugins: ['add-module-exports']
+          presets: ['es2015']
         }
       }
     ]

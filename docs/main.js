@@ -54,7 +54,7 @@ render();
 
   function initText() {
     let size = document.querySelector('.toolbar .text-size');
-    [8, 9, 10, 11, 12, 14, 18, 24, 30, 36, 48, 60, 72, 96].forEach((s) => {
+    [8, 9, 10, 11, 12, 14, 18, 24].forEach((s) => {
       size.appendChild(new Option (s, s));
     });
 
@@ -118,7 +118,7 @@ render();
 
   function initPen() {
     let size = document.querySelector('.toolbar .pen-size');
-    for (let i=0; i<20; i++) {
+    for (let i=0; i<0; i++) {
       size.appendChild(new Option(i+1, i+1));
     }
 
@@ -283,7 +283,7 @@ render();
 // Clear toolbar button
 (function () {
   function handleClearClick(e) {
-    if (confirm('Are you sure you want to clear annotations?')) {
+    if (confirm('Desea borrar todas las anotaciones?')) {
       for (let i=0; i<NUM_PAGES; i++) {
         document.querySelector(`div#pageContainer${i+1} svg.annotationLayer`).innerHTML = '';
       }

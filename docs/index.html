@@ -2,9 +2,11 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <title>PDFJSAnnotate</title>
+  <title>VISOR DE EXPEDIENTES</title>
+  <link rel="shortcut icon" href="shared/images/logoCDigital.png">
   <link rel="stylesheet" type="text/css" href="shared/toolbar.css"/>
   <link rel="stylesheet" type="text/css" href="shared/pdf_viewer.css"/>
+  <script src="https://use.fontawesome.com/aea2e18f74.js"></script>
   <style type="text/css">
     body {
       background-color: #eee;
@@ -87,29 +89,33 @@
 </head>
 <body>
   <div class="toolbar">
-    <button class="cursor" type="button" title="Cursor" data-tooltype="cursor">➚</button>
+    <button class="cursor" type="button" title="Seleccionar" data-tooltype="cursor"><i class="fa fa-mouse-pointer"
+      aria-hidden="true"></i></button>
 
     <div class="spacer"></div>
 
-    <button class="rectangle" type="button" title="Rectangle" data-tooltype="area">&nbsp;</button>
-    <button class="highlight" type="button" title="Highlight" data-tooltype="highlight">&nbsp;</button>
-    <button class="strikeout" type="button" title="Strikeout" data-tooltype="strikeout">&nbsp;</button>
+    <button class="rectangle" type="button" title="Dibujar Rectángulo" data-tooltype="area">&nbsp;</button>
+    <button class="highlight" type="button" title="Resaltar Texto" data-tooltype="highlight">&nbsp;</button>
+    <button class="strikeout" type="button" title="Tachar Texto" data-tooltype="strikeout">&nbsp;</button>
 
     <div class="spacer"></div>
 
-    <button class="text" type="button" title="Text Tool" data-tooltype="text"></button>
+    <button class="text" type="button" title="Escribir Texto" data-tooltype="text"><i
+      class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
     <select class="text-size"></select>
     <div class="text-color"></div>
 
     <div class="spacer"></div>
 
-    <button class="pen" type="button" title="Pen Tool" data-tooltype="draw">✎</button>
+    <button class="pen" type="button" title="Marcador" data-tooltype="draw"><i class="fa fa-pencil"
+      aria-hidden="true"></i></button>
     <select class="pen-size"></select>
     <div class="pen-color"></div>
 
     <div class="spacer"></div>
 
-    <button class="comment" type="button" title="Comment" data-tooltype="point">🗨</button>
+    <button class="comment" type="button" title="Agregar Nota" data-tooltype="point"><i
+      class="fa fa-comments-o fa-2x" aria-hidden="true"></i></button>
 
     <div class="spacer"></div>
 
@@ -121,24 +127,27 @@
       <option value="2">200%</option>
     </select>
 
-    <a href="javascript://" class="rotate-ccw" title="Rotate Counter Clockwise">⟲</a>
-    <a href="javascript://" class="rotate-cw" title="Rotate Clockwise">⟳</a>
+    <a href="javascript://" class="rotate-ccw" title="Rotar a la izquierda"><i class="fa fa-undo"
+      aria-hidden="true"></i></a>
+    <a href="javascript://" class="rotate-cw" title="Rotar a la derecha"><i class="fa fa-repeat"
+      aria-hidden="true"></i></a>
 
     <div class="spacer"></div>
 
-    <a href="javascript://" class="clear" title="Clear">×</a>
+    <a href="javascript://" class="clear" title="Borrar todas las notas"><i class="fa fa-trash-o"
+      aria-hidden="true"></i></a>
   </div>
   <div id="content-wrapper">
     <div id="viewer" class="pdfViewer"></div>
   </div>
   <div id="comment-wrapper">
-    <h4>Comments</h4>
+    <h4>Notas del documento</h4>
     <div class="comment-list">
       <div class="comment-list-container">
-        <div class="comment-list-item">No comments</div>
+        <div class="comment-list-item">No hay notas</div>
       </div>
       <form class="comment-list-form" style="display:none;">
-        <input type="text" placeholder="Add a Comment"/>
+        <input type="text" placeholder="Agregar un comentario"/>
       </form>
     </div>
   </div>
