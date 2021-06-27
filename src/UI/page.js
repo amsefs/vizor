@@ -65,6 +65,9 @@ export function renderPage(pageNumber, renderOptions) {
     let viewport = pdfPage.getViewport(scale, rotate);
     let transform = scalePage(pageNumber, viewport, canvasContext);
 
+     if (!renderOptions.seeComments) {
+            annotations.annotations = [];
+        }
     // Render the page
     return Promise.all([
       pdfPage.render({ canvasContext, viewport, transform }),
