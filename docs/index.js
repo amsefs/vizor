@@ -99,18 +99,55 @@
 	  }
 	});
 
+	//-------------Extra-----------------------------------
+	function obtTodasAnotaciones(documentId) {
+	  var todasAnotaciones = JSON.parse(localStorage.getItem(documentId + '/annotations')) || [];
+
+	  var filtrarSoloAnnotations = todasAnotaciones.filter(function (i) {
+	    return i.class === 'Annotation'; //&& i.type === 'point'
+	  });
+	  var index = -1;
+	  var arrayAnotionsClassPoint = [];
+
+	  var _loop = function _loop(i, l) {
+
+	    var filtrarCommentsDeAnnotations = todasAnotaciones.filter(function (j) {
+	      return j.annotation === filtrarSoloAnnotations[i].uuid && j.class === 'Comment';
+	    });
+	    if (filtrarCommentsDeAnnotations.length > 0) {
+	      console.log("posicio:" + i + "::");
+	      console.log("longitud::" + filtrarCommentsDeAnnotations.length);
+	      console.log(filtrarCommentsDeAnnotations[filtrarCommentsDeAnnotations.length - 1].content);
+	      var objComment = {
+	        comment: filtrarCommentsDeAnnotations[filtrarCommentsDeAnnotations.length - 1].content,
+	        page: filtrarSoloAnnotations[i].page,
+	        posx: filtrarSoloAnnotations[i].x,
+	        posy: filtrarSoloAnnotations[i].y
+	      };
+	      arrayAnotionsClassPoint.push(objComment);
+	    }
+	  };
+
+	  for (var i = 0, l = filtrarSoloAnnotations.length; i < l; i++) {
+	    _loop(i, l);
+	  }
+	  return arrayAnotionsClassPoint;
+	}
+	//-----------------------------------------------------
+
 	// List all annotations in the document
 	function listAnnotations() {
-	  var annotations = JSON.parse(localStorage.getItem(RENDER_OPTIONS.documentId + '/annotations')) || [];
+	  console.log("Ingresando a funcion listAnnotations");
+	  //let annotations = JSON.parse(localStorage.getItem(`${RENDER_OPTIONS.documentId}/annotations`)) || [];
 	  var commentList = document.querySelector('#comment-wrapper .comment-list-container');
-
-	  function groupComments(comments) {
-	    var result = [];
-	    comments.map(function (item) {
+	  commentList.innerHTML = '';
+	  /*function groupComments(comments) {
+	    let result = [];
+	    comments.map(item => {
 	      if (item.type) {
-	        var pibote = item;
+	        let pibote = item;
 	        pibote.content = '';
-	        comments.map(function (itemComent) {
+	        comments.map(itemComent => {
 	          if (itemComent.annotation && itemComent.class == 'Comment' && itemComent.annotation == pibote.uuid) {
 	            pibote.content = pibote.content + ' ' + itemComent.content;
 	          }
@@ -119,16 +156,15 @@
 	      }
 	    });
 	    return result;
-	  }
+	  }*/
 
-	  function goToPage(x, y, pageNumber) {
-	    // e?
-	    console.log('sata', x, y, pageNumber);
+	  /*function goToPage(x, y, pageNumber) { // e?
+	    console.log('sata', x, y, pageNumber)
 	    if (pageNumber && pageNumber > 0) {
 	      // render2(pageNumber, x, y);
 	      showPage(pageNumber);
 	    }
-	  }
+	  }*/
 
 	  function insertCommentWithLink(comment) {
 	    var child = document.createElement('div');
@@ -137,7 +173,8 @@
 	    // child.addEventListener('click', function() { goToPage(comment.x || '0', comment.y || '0', comment.page || '0') }); //        //saltar);
 
 	    var createA = document.createElement('a');
-	    var createAText = document.createTextNode(comment.content);
+	    var createAText = document.createTextNode(comment.comment);
+	    //var createAText = document.createTextNode(comment.content);
 	    createA.setAttribute('href', "#pageContainer" + comment.page);
 	    createA.appendChild(createAText);
 	    child.appendChild(createA);
@@ -145,18 +182,23 @@
 	    commentList.appendChild(child);
 	  }
 
-	  var sortedComments = groupComments(annotations);
+	  //let sortedComments = groupComments(annotations);
+	  var sortedComments = obtTodasAnotaciones(documentId);
+	  console.log(sortedComments);
 
-	  var nested = document.querySelector(".comment-list-container");
-	  nested.innerHTML = '';
+	  //let nested = document.querySelector(".comment-list-container");
+	  //nested.innerHTML = '';
 	  sortedComments.map(function (elem) {
 	    // annotations.map(elem => {
-	    console.log('elem ', elem);
+	    //console.log('elem ', elem)
 	    return insertCommentWithLink(elem);
 	  });
 	}
 
 	function render() {
+
+	  listAnnotations();
+
 	  PDFJS.getDocument(RENDER_OPTIONS.documentId).then(function (pdf) {
 	    RENDER_OPTIONS.pdfDocument = pdf;
 
@@ -179,7 +221,6 @@
 	  });
 	}
 	render();
-	listAnnotations();
 
 	// Text stuff
 	(function () {
