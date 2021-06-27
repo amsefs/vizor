@@ -68,14 +68,14 @@ body {
 
 .toolbar button.comment {
   font-size: 10px;
-  color: #ffffff;
+  /* color: #ffffff; */
   text-shadow: 0 0 0 #000000;
 }
 
 .toolbar button.rectangle:after {
   width: 15px;
   height: 15px;
-  border: 1px solid red;
+  border: 2px solid red;
   position: absolute;
   top: 4px;
   left: 4px;
@@ -85,6 +85,7 @@ body {
   width: 17px;
   height: 17px;
   background: yellow;
+  border: 1px solid yellow;
   position: absolute;
   top: 4px;
   left: 4px;
@@ -94,13 +95,14 @@ body {
   width: 15px;
   height: 1px;
   background: red;
+  border: 1px solid red;
   position: absolute;
   top: 12px;
   left: 4px;
 }
 
 .toolbar button.text:after {
-  content: 'T';
+  /* content: 'T'; */
   font-family: 'Times New Roman';
 }
 
