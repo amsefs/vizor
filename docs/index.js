@@ -5907,7 +5907,8 @@
 					var documentId = renderOptions.documentId,
 					    pdfDocument = renderOptions.pdfDocument,
 					    scale = renderOptions.scale,
-					    rotate = renderOptions.rotate;
+					    rotate = renderOptions.rotate,
+					    seeComments = renderOptions.seeComments;
 
 					// Load the page and annotations
 
@@ -5923,6 +5924,9 @@
 						var viewport = pdfPage.getViewport(scale, rotate);
 						var transform = scalePage(pageNumber, viewport, canvasContext);
 
+						if (!renderOptions.seeComments) {
+							annotations.annotations = [];
+						}
 						// Render the page
 						return Promise.all([pdfPage.render({ canvasContext: canvasContext, viewport: viewport, transform: transform }), _PDFJSAnnotate2.default.render(svg, viewport, annotations)]).then(function () {
 							// Text content is needed for a11y, but is also necessary for creating
