@@ -475,16 +475,7 @@
 	  function handleCommentsChange(e) {
 	    setComments(e.target.checked);
 	  }
-
-	  function handleCommentsClick(e) {
-	    var see = !RENDER_OPTIONS.seeComments;
-	    var tiket = document.querySelector('input[type="checkbox"]');
-	    tiket.checked = !tiket.checked;
-	    setComments(see);
-	  }
-
 	  document.querySelector('.toolbar input[type="checkbox"]').addEventListener('change', handleCommentsChange);
-	  document.querySelector('.toolbar .seeComments').addEventListener('click', handleCommentsClick);
 	})();
 
 	// list all comments
